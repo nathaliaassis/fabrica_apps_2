@@ -1,114 +1,101 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React, { Component } from 'react';
+import { View, StyleSheet, Text, TextInput, Button, TouchableHighlight } from 'react-native';
+import firebase from 'firebase';
 
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+export default class App extends Component {
+  constructor(props) {
+    super(props);
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+    this.state = {
+      nome: '',
+      cargo: '',
+    }
+    this.cadastrar = this.cadastrar.bind(this);
 
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+    let config = {
+      apiKey: "AIzaSyBgaeJGSQtU6uXjDaaKGjDuK46u9qWEXNQ",
+      authDomain: "meuapp-2d985.firebaseapp.com",
+      databaseURL: "https://meuapp-2d985.firebaseio.com",
+      projectId: "meuapp-2d985",
+      storageBucket: "meuapp-2d985.appspot.com",
+      messagingSenderId: "818945985520",
+      appId: "1:818945985520:web:97bd8e9cc61decfdc22b35",
+      measurementId: "G-VDVW0ZP5YJ"
+    };
 
+    if (!firebase.apps.length) {
+      firebase.initializeApp(config);
+    }
+  }
+
+  cadastrar() {
+    if (this.state.nome != '' && this.state.cargo != '') {
+
+      let users = firebase.database().ref('users');
+      let chave = users.push().key;
+
+      users.child(chave).set({
+        nome: this.state.nome,
+        cargo: this.state.cargo
+      });
+      alert('usuario cadastrado com sucesso')
+    } else {
+      alert('preencha os campos')
+    }
+  }
+
+  render() {
+
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>Nome: </Text>
+        <TextInput
+          style={styles.input}
+          underlineColorAndroid="transparent"
+          onChangeText={(nome) => {
+            this.setState({ nome })
+          }}
+        />
+        <Text style={styles.text}>Cargo: </Text>
+        <TextInput
+          style={styles.input}
+          underlineColorAndroid="transparent"
+          onChangeText={(cargo) => {
+            this.setState({ cargo })
+          }}
+        />
+        <TouchableHighlight style={styles.btn} onPress={this.cadastrar}>
+          <Text style={styles.btnText}>Cadastrar</Text>
+        </TouchableHighlight>
+      </View>
+    );
+  }
+}
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  container: {
+    flex: 1,
+    backgroundColor: '#001d51',
+    padding: 20,
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  text: {
+    color: 'white',
+    fontSize: 20,
   },
-  body: {
-    backgroundColor: Colors.white,
+  input: {
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 10,
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  btn: {
+    backgroundColor: '#ff5555',
+    padding: 15,
+    alignItems: 'center',
+    borderRadius: 5,
+    marginVertical: 10,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
+  btnText: {
+    color: 'white',
+    fontSize: 20,
+  }
 });
-
-export default App;
