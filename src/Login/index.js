@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, Keyboard } from 'react-native';
 import firebase from '../dbConnection';
+import { CommonActions } from '@react-navigation/native';
+
+console.disableYellowBox = true;
 
 export default class Login extends Component {
     constructor(props) {
@@ -9,26 +12,38 @@ export default class Login extends Component {
         this.state = {
             email: '',
             senha: '',
-            isLoggedIn: false
+            isLoggedIn: false,
+            nome: '',
         }
         this.Logar = this.Logar.bind(this);
-    }
-    setIsLoggedIn = (isLoggedIn) => { this.setState({ isLoggedIn }); }
 
-    Logar() {
-        firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.senha)
-            .catch((error) => {
-                if (error.code == 'auth/wrong-password') {
-                    alert('Senha incorreta.')
-                }
-                else {
-                    alert('Ops, tente novamente.');
-                }
-            });
-
+        firebase.auth().signOut();
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-                this.props.navigation.navigate('Home');
+                firebase.database().ref('users').child(user.uid).once('value')
+                    .then((snapshot) => {
+                        let nome = snapshot.val().nome;
+
+                    });
+
+                this.props.navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Home' }],
+                });
+            }
+        });
+    }
+
+    Logar() {
+        firebase.auth().signInWithEmailAndPassword(
+            this.state.email,
+            this.state.senha
+        ).catch((error) => {
+            if (error.code == 'auth/wrong-password') {
+                alert('Senha incorreta.')
+            }
+            else {
+                alert('Ops, tente novamente.');
             }
         });
 
@@ -58,6 +73,11 @@ export default class Login extends Component {
                 <TouchableOpacity style={styles.btn} onPress={this.Logar}>
                     <Text style={styles.btnText}>Entrar</Text>
                 </TouchableOpacity>
+                <Text style={[styles.text, { textAlign: 'center' }]}
+                    onPress={() => this.props.navigation.navigate('Cadastrar')}
+                >
+                    Criar minha conta
+                </Text>
             </View>
         );
     }

@@ -7,10 +7,21 @@ export default class Cadastrar extends Component {
         super(props);
 
         this.state = {
+            nome: '',
             email: '',
             senha: '',
         }
         this.cadastrar = this.cadastrar.bind(this);
+
+        firebase.auth().signOut();
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                firebase.database().ref('users').child(user.uid).set({
+                    nome: this.state.nome
+                })
+            }
+        });
 
     }
 
@@ -32,7 +43,15 @@ export default class Cadastrar extends Component {
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>Cadastrar</Text>
-                <Text style={styles.text}>email: </Text>
+                <Text style={styles.text}>Nome: </Text>
+                <TextInput
+                    style={styles.input}
+                    underlineColorAndroid="transparent"
+                    onChangeText={(nome) => {
+                        this.setState({ nome })
+                    }}
+                />
+                <Text style={styles.text}>E-mail: </Text>
                 <TextInput
                     style={styles.input}
                     underlineColorAndroid="transparent"
@@ -40,7 +59,7 @@ export default class Cadastrar extends Component {
                         this.setState({ email })
                     }}
                 />
-                <Text style={styles.text}>senha: </Text>
+                <Text style={styles.text}>Senha: </Text>
                 <TextInput
                     style={styles.input}
                     underlineColorAndroid="transparent"
