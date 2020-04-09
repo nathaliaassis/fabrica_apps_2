@@ -31,8 +31,12 @@ export default class Login extends Component {
                     alert('Ops, tente novamente.');
                 }
             });
-
+        Keyboard.dismiss();
     };
+    Sair() {
+        firebase.auth().signOut();
+        alert('Deslogado com sucesso');
+    }
 
     render() {
 
@@ -57,6 +61,9 @@ export default class Login extends Component {
                 />
                 <TouchableHighlight style={styles.btn} onPress={this.Logar}>
                     <Text style={styles.btnText}>Entrar</Text>
+                </TouchableHighlight>
+                <TouchableHighlight style={styles.btn} onPress={this.Sair}>
+                    <Text style={styles.btnText}>Sair</Text>
                 </TouchableHighlight>
             </View>
         );
