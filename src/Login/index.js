@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TextInput, Button, TouchableHighlight, Keyboard } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Keyboard } from 'react-native';
 import firebase from '../dbConnection';
 
 export default class Login extends Component {
@@ -9,19 +9,13 @@ export default class Login extends Component {
         this.state = {
             email: '',
             senha: '',
+            isLoggedIn: false
         }
         this.Logar = this.Logar.bind(this);
-
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                alert('Usuário logado com sucesso!');
-            }
-        });
-
     }
+    setIsLoggedIn = (isLoggedIn) => { this.setState({ isLoggedIn }); }
 
     Logar() {
-
         firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.senha)
             .catch((error) => {
                 if (error.code == 'auth/wrong-password') {
@@ -31,13 +25,15 @@ export default class Login extends Component {
                     alert('Ops, tente novamente.');
                 }
             });
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.props.navigation.navigate('Home');
+            }
+        });
+
         Keyboard.dismiss();
     };
-    Sair() {
-        firebase.auth().signOut();
-        alert('Deslogado com sucesso');
-    }
-
     render() {
 
         return (
@@ -59,12 +55,9 @@ export default class Login extends Component {
                         this.setState({ senha })
                     }}
                 />
-                <TouchableHighlight style={styles.btn} onPress={this.Logar}>
+                <TouchableOpacity style={styles.btn} onPress={this.Logar}>
                     <Text style={styles.btnText}>Entrar</Text>
-                </TouchableHighlight>
-                <TouchableHighlight style={styles.btn} onPress={this.Sair}>
-                    <Text style={styles.btnText}>Sair</Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
         );
     }
@@ -72,6 +65,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
         backgroundColor: '#001d51',
         padding: 20,
     },
