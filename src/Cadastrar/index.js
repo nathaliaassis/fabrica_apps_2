@@ -31,6 +31,7 @@ export default class Cadastrar extends Component {
 
         return (
             <View style={styles.container}>
+                <Text style={styles.title}>Cadastrar</Text>
                 <Text style={styles.text}>email: </Text>
                 <TextInput
                     style={styles.input}
@@ -59,6 +60,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#001d51',
         padding: 20,
+    },
+    title: {
+        textAlign: 'center',
+        color: 'white',
+        fontSize: 40,
+        marginBottom: 24,
     },
     text: {
         color: 'white',
