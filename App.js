@@ -13,7 +13,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Drawer.Navigator
-        initialRouteName="Cadastrar"
+        initialRouteName="Login"
         drawerContentOptions={{
           activeTintColor: '#ff5555'
         }}
