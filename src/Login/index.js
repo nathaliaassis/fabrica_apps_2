@@ -26,10 +26,7 @@ export default class Login extends Component {
 
                     });
 
-                this.props.navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'Home' }],
-                });
+                this.props.navigation.navigate('Home');
             }
         });
     }
