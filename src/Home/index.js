@@ -4,7 +4,6 @@ import firebase from '../dbConnection';
 
 
 export default class Home extends Component {
-
     constructor(props) {
         super(props);
         this.Sair = this.Sair.bind(this);
